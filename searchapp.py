@@ -23,14 +23,21 @@ def search():
     # Get the search query from the URL query string
     query = request.args.get('query')
 
-    search_term_vector = get_embedding(query, engine="text-embedding-ada-002")
+    search_term_vector = get_embedding(query, engine="text-embedding-ada-002")                     # getting the vector for the search term
+    print(search_term_vector)  
 
-    df = pd.read_csv('embeddings.csv')
+    df = pd.read_csv('reviews_with_embeddings_1k.csv')                                          # putting csv in to dataframe likely to use pinecone db
+    print (df)      
+
     df['embedding'] = df['embedding'].apply(eval).apply(np.array)
-    df["similarities"] = df['embedding'].apply(lambda x: cosine_similarity(x, search_term_vector))
-    sorted_by_similarity = df.sort_values("similarities", ascending=False).head(3)
+    print('after adding the simalaraties column in the df')
+    print (df)
 
-    results = sorted_by_similarity['text'].values.tolist()
+    df["similarities"] = df['embedding'].apply(lambda x: cosine_similarity(x, search_term_vector))
+    sorted_by_similarity = df.sort_values("similarities", ascending=False).head(3)               # limiting results to top 3 based on simalarities 
+
+    results = sorted_by_similarity['combined'].values.tolist()    # what column is being output to results 
+    
 
     # Render the search results template, passing in the search query and results
     return render_template('search_results.html', query=query, results=results)
