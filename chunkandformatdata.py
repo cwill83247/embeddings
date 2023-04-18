@@ -29,22 +29,29 @@ def remove_newlines(serie):
 ################################################################################
 
 # Create a list to store the text files                                    ##### This then reads the text File 
-#texts=[]
+texts=[]
 
 # Get all the text files in the text directory
 #for file in os.listdir("text/" + domain + "/"):
 
     # Open the file and read the text
 f = open('contenttoembed/textcopyandpastedplanning.csv') 
-text = f.read()                                                                 #text is the contents of the file 
-
+text = f.read()    
+texts.append(text)                                                             #text is the contents of the file 
+print(text)
     # Omit the first 11 lines and the last 4 lines, then replace -, _, and #update with spaces.               ### ? 
     #texts.append((file[11:-4].replace('-',' ').replace('_', ' ').replace('#update',''), text))
 
 # Create a dataframe from the list of texts
-df = pd.DataFrame(columns = ['fname', 'text'])                                     ## create columns readt for data 
+df = pd.DataFrame(texts, columns = ['text'])                                     ## create datadrame and columns ready for data 
 
 # Set the text column to be the raw text with the newlines removed
-df['text'] = df.fname + ". " + remove_newlines(df.text)                           ## calls the remove_newlines function 
+#df['text'] = df.fname + ". " + remove_newlines(df.text)                           ## calls the remove_newlines function 
+df['text'] = remove_newlines(df.text)
+print("here in code")
+print(df)    
 df.to_csv('planningscraped.csv')                                              ##scraped csv had id,fname and text
 df.head()    
+
+## now need to chunk the data 
+
